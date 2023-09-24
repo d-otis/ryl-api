@@ -17,9 +17,11 @@ RSpec.describe LandlordSerializer do
 
   let(:landlord) { FactoryBot.build_stubbed(:landlord, id: id , name: name) }
 
-  subject { described_class.new(landlord).serializable_hash.to_json }
+  subject { described_class }
 
-  it 'serializes the landlord' do
-    expect(subject).to eq(expected_json.to_json)
+  it 'serializes a single landlord with required attributes' do
+    result = subject.new(landlord).serializable_hash
+    expect(result[:data][:attributes].key?(:name)).to eq(true)
+    expect(result.to_json).to eq(expected_json.to_json)
   end
 end
