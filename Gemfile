@@ -11,6 +11,12 @@ gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
+# Use Faker for fake data in production since this is merely a demo app
+gem "faker"
+
+# JSON Serializer
+gem "jsonapi-serializer"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
