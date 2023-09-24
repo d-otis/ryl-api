@@ -2,9 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::LandlordsController, type: :controller do
   describe "GET /show" do
-    xit "returns http success" do
-      get "/api/v1/landlords/show"
+    it "returns http success" do
+      allow(Landlord).to receive(:find).and_return(FactoryBot.build_stubbed(:landlord))
+      
+      get :show, params: { id: 'a-uuid' }
       expect(response).to have_http_status(:success)
+      expect(assigns(:landlord)).to eq(Landlord.find('a-uuid'))
     end
   end
 
