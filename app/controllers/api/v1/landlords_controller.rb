@@ -4,7 +4,7 @@ class Api::V1::LandlordsController < ApplicationController
 
     render json: LandlordSerializer.new(@landlord).serializable_hash.to_json
   rescue ActiveRecord::RecordNotFound
-    render status: :not_found
+    render json: {data: 'Landlord not found'}, status: :not_found
   end
 
   def index
