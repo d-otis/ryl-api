@@ -3,6 +3,8 @@ class Api::V1::LandlordsController < ApplicationController
     @landlord = Landlord.find(params[:id])
 
     render json: LandlordSerializer.new(@landlord).serializable_hash.to_json
+  rescue ActiveRecord::RecordNotFound
+    render status: :not_found
   end
 
   def index
