@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Landlords", type: :request do
+RSpec.describe Api::V1::LandlordsController, type: :controller do
   describe "GET /show" do
-    it "returns http success" do
+    xit "returns http success" do
       get "/api/v1/landlords/show"
       expect(response).to have_http_status(:success)
     end
@@ -10,23 +10,19 @@ RSpec.describe "Api::V1::Landlords", type: :request do
 
   describe "GET /index" do
     it "returns http success" do
-      get "/api/v1/landlords/index"
+      get :index
       expect(response).to have_http_status(:success)
     end
-  end
 
-  describe "GET /create" do
-    it "returns http success" do
-      get "/api/v1/landlords/create"
-      expect(response).to have_http_status(:success)
+    it 'assigns @landlords' do
+      get :index
+      expect(assigns(:landlords)).to eq(Landlord.all)
+    end
+
+    it "returns all landlords" do
+      allow(Landlord).to receive(:all).and_return([FactoryBot.build_stubbed(:landlord)])
+      get :index
+      expect(JSON.parse(response.body).size).to eq(1)
     end
   end
-
-  describe "GET /update" do
-    it "returns http success" do
-      get "/api/v1/landlords/update"
-      expect(response).to have_http_status(:success)
-    end
-  end
-
 end

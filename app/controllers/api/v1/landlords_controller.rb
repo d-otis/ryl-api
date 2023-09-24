@@ -5,7 +5,7 @@ class Api::V1::LandlordsController < ApplicationController
   def index
     @landlords = Landlord.all
 
-    render json: LandlordSerializer.new(@landlords)
+    render json: LandlordSerializer.new(@landlords).serializable_hash.to_json
   end
 
   def create
