@@ -14,8 +14,21 @@ class Api::V1::LandlordsController < ApplicationController
   end
 
   def create
+    @landlord = Landlord.new(landlord_params)
+
+    if @landlord.save
+      render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :created
+    else
+      render json: {data: @landlord.errors.full_messages}, status: :unprocessable_entity
+    end
   end
 
   def update
+  end
+
+  private
+
+  def landlord_params
+    params.permit(:name)
   end
 end

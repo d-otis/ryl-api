@@ -47,4 +47,37 @@ RSpec.describe Api::V1::LandlordsController, type: :controller do
       expect(JSON.parse(response.body).size).to eq(1)
     end
   end
+
+  describe "POST /create" do
+    context "when successful" do
+      it "returns http success" do
+        post :create, params: { name: 'John Doe' }
+        expect(response).to have_http_status(:created)
+      end
+  
+      it "creates a landlord" do
+        expect {
+          post :create, params: { name: 'John Doe' }
+        }.to change { Landlord.count }.by(1)
+      end
+    end
+
+    context "when unsuccessful" do
+      it "returns http unprocessable entity" do
+        post :create, params: { name: nil }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns an error message" do
+        post :create, params: { name: nil }
+        expect(JSON.parse(response.body)['data']).to eq(["Name can’t be blank"])
+      end
+  
+      it "does not create a landlord" do
+        expect {
+          post :create, params: { name: nil }
+        }.to_not change { Landlord.count }
+      end
+    end
+  end
 end
