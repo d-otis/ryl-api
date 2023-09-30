@@ -1,4 +1,5 @@
 class Api::V1::LandlordsController < ApplicationController
+  # TODO: rescue_from ActiveRecord::RecordNotFound with a method
   def show
     @landlord = Landlord.find(params[:id])
 
@@ -24,6 +25,17 @@ class Api::V1::LandlordsController < ApplicationController
   end
 
   def update
+    # TODO: create a set_landlord method to DRY this up and others using #find
+    @landlord = Landlord.find(params[:id])
+
+    if @landlord.update(landlord_params)
+      render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :ok
+    else
+      render json: {data: @landlord.errors.full_messages}, status: :unprocessable_entity
+    end
+
+  rescue ActiveRecord::RecordNotFound
+    render json: {data: 'Landlord not found'}, status: :not_found
   end
 
   private

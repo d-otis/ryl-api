@@ -80,4 +80,46 @@ RSpec.describe Api::V1::LandlordsController, type: :controller do
       end
     end
   end
+
+  describe "PUT /update" do
+    context "when successful" do
+      let(:landlord) { FactoryBot.create(:landlord) }
+      let(:landlord_id) { landlord.id }
+
+      it "returns http success" do
+        put :update, params: { id: landlord_id, name: 'John Doe' }
+        expect(response).to have_http_status(:success)
+      end
+
+      it "returns the updated landlord" do
+        put :update, params: { id: landlord_id, name: 'John Doe' }
+        expect(JSON.parse(response.body)['data']['attributes']['name']).to eq('John Doe')
+      end
+
+      it "updates the landlord" do
+        expect {
+          put :update, params: { id: landlord_id, name: 'John Doe' }
+        }.to change { Landlord.find(landlord_id).name }.to('John Doe')
+      end
+    end
+
+    context "when unsuccessful" do
+      context "when the landlord does not exist" do
+        let(:landlord_id) { SecureRandom.uuid }
+
+        before(:each) do
+          allow(Landlord).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        end
+  
+        it "returns http not found" do
+          put :update, params: { id: landlord_id, name: 'John Doe' }
+          expect {
+            Landlord.find(landlord_id)
+          }.to raise_error(ActiveRecord::RecordNotFound)
+          
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+  end
 end
