@@ -1,11 +1,10 @@
 class Api::V1::LandlordsController < ApplicationController
-  # TODO: rescue_from ActiveRecord::RecordNotFound with a method
+  rescue_from ActiveRecord::RecordNotFound, with: :landlord_not_found
+
   def show
     @landlord = Landlord.find(params[:id])
 
     render json: LandlordSerializer.new(@landlord).serializable_hash.to_json
-  rescue ActiveRecord::RecordNotFound
-    render json: {data: 'Landlord not found'}, status: :not_found
   end
 
   def index
@@ -33,14 +32,15 @@ class Api::V1::LandlordsController < ApplicationController
     else
       render json: {data: @landlord.errors.full_messages}, status: :unprocessable_entity
     end
-
-  rescue ActiveRecord::RecordNotFound
-    render json: {data: 'Landlord not found'}, status: :not_found
   end
 
   private
 
   def landlord_params
     params.permit(:name)
+  end
+
+  def landlord_not_found
+    render json: {data: 'Landlord not found'}, status: :not_found
   end
 end
