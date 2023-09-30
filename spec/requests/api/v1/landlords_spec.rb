@@ -122,4 +122,41 @@ RSpec.describe Api::V1::LandlordsController, type: :controller do
       end
     end
   end
+
+  context 'DELETE /destroy' do
+    let!(:landlord) { FactoryBot.create(:landlord) }
+
+    context "when successful" do
+      it "deletes the landlord" do
+        expect {
+          delete :destroy, params: { id: landlord.id }
+        }.to change{ Landlord.count }.by(-1)
+      end
+    end
+
+    context "when unsuccessful" do
+      context "when landlord not found" do
+        let(:landlord_id) { SecureRandom.uuid }
+
+        before(:each) do
+          allow(Landlord).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        end
+
+        it "returns 404 not found" do
+          delete :destroy, params: { id: landlord_id }
+          expect {
+            Landlord.find(landlord_id)
+          }.to raise_error(ActiveRecord::RecordNotFound)
+
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it "doesn't change landlord count" do
+          expect {
+            delete :destroy, params: { id: landlord_id }
+          }.to_not change{ Landlord.count }
+        end
+      end
+    end
+  end
 end
