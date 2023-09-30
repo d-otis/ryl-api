@@ -1,9 +1,8 @@
 class Api::V1::LandlordsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :landlord_not_found
+  before_action :set_landlord, only: [:show, :update]
 
   def show
-    @landlord = Landlord.find(params[:id])
-
     render json: LandlordSerializer.new(@landlord).serializable_hash.to_json
   end
 
@@ -24,9 +23,6 @@ class Api::V1::LandlordsController < ApplicationController
   end
 
   def update
-    # TODO: create a set_landlord method to DRY this up and others using #find
-    @landlord = Landlord.find(params[:id])
-
     if @landlord.update(landlord_params)
       render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :ok
     else
@@ -38,6 +34,10 @@ class Api::V1::LandlordsController < ApplicationController
 
   def landlord_params
     params.permit(:name)
+  end
+
+  def set_landlord
+    @landlord = Landlord.find(params[:id])
   end
 
   def landlord_not_found
