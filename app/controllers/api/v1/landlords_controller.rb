@@ -3,13 +3,13 @@ class Api::V1::LandlordsController < ApplicationController
   before_action :set_landlord, only: [:show, :update, :destroy]
 
   def show
-    render json: LandlordSerializer.new(@landlord).serializable_hash.to_json
+    render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :ok
   end
 
   def index
     @landlords = Landlord.all
 
-    render json: LandlordSerializer.new(@landlords).serializable_hash.to_json
+    render json: LandlordSerializer.new(@landlords).serializable_hash.to_json, status: :ok
   end
 
   def create
