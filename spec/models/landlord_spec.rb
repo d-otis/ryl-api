@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 include FactoryBot::Syntax::Methods
 
 RSpec.describe Landlord, type: :model do
