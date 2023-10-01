@@ -43,6 +43,7 @@ group :development, :test do
   gem "pry"
   gem "rails-controller-testing"
   gem "standard"
+  gem "standard-rails"
 end
 
 group :development do
