@@ -3,20 +3,20 @@ class Api::V1::LandlordsController < ApplicationController
   before_action :set_landlord, only: [:show, :update, :destroy]
 
   def show
-    render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :ok
+    render json: serialize_landlord_data(@landlord), status: :ok
   end
 
   def index
     @landlords = Landlord.all
 
-    render json: LandlordSerializer.new(@landlords).serializable_hash.to_json, status: :ok
+    render json: serialize_landlord_data(@landlords), status: :ok
   end
 
   def create
     @landlord = Landlord.new(landlord_params)
 
     if @landlord.save
-      render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :created
+      render json: serialize_landlord_data(@landlord), status: :created
     else
       render json: {data: @landlord.errors.full_messages}, status: :unprocessable_entity
     end
@@ -24,7 +24,7 @@ class Api::V1::LandlordsController < ApplicationController
 
   def update
     if @landlord.update(landlord_params)
-      render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :ok
+      render json: serialize_landlord_data(@landlord), status: :ok
     else
       render json: {data: @landlord.errors.full_messages}, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class Api::V1::LandlordsController < ApplicationController
 
   def destroy
     if @landlord.destroy
-      render json: LandlordSerializer.new(@landlord).serializable_hash.to_json, status: :ok
+      render json: serialize_landlord_data(@landlord), status: :ok
     end
   end
 
@@ -48,5 +48,9 @@ class Api::V1::LandlordsController < ApplicationController
 
   def landlord_not_found
     render json: {data: 'Landlord not found'}, status: :not_found
+  end
+
+  def serialize_landlord_data(data)
+    LandlordSerializer.new(data).serializable_hash.to_json
   end
 end
