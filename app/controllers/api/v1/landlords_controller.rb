@@ -47,7 +47,7 @@ class Api::V1::LandlordsController < ApplicationController
   end
 
   def landlord_not_found
-    render json: {data: 'Landlord not found'}, status: :not_found
+    render json: {data: "Landlord not found"}, status: :not_found
   end
 
   def serialize_landlord_data(data)

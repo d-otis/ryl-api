@@ -14,6 +14,6 @@ num_landlords = 100
 
 num_landlords.times do
   Landlord.create!(
-    name: Faker::Name.name,
+    name: Faker::Name.name
   )
 end
